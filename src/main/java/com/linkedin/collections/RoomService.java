@@ -32,7 +32,7 @@ public class RoomService {
 	   3. Return a new Collection of Rooms where Room#type matches the provided String.
 		  The original Room Inventory collection MUST NOT BE MODIFIED.
 	*/
-		Collection<Room> copy = new HashSet(this.inventory);
+		Collection<Room> copy = new HashSet<>(this.inventory);
 		copy.removeIf(r->!r.getType().equals(type));
 		return copy;
 		
