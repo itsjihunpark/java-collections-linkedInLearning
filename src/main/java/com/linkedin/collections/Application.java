@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Predicate; //a functional interface
+import java.util.stream.Collectors;
 import java.util.function.Consumer; //another functional interface we need to supply to forEach terminal operation;
+import java.util.function.ToDoubleFunction;
 public class Application {
 
 	public static void main(String[] args) {
@@ -169,8 +171,51 @@ public class Application {
 		//We can replace the lambda with a method reference
 		//Method reference allows us to pass a method into a function
 		*/
+		Collection<Room> petFriendlyRooms = new ArrayList<>();
+		
 		rooms.stream()
 			.filter(Room::isPetFriendly) //'Room type::invoke isPetFriendly' Method reference can be used as a predicate for our filter operation
 			.forEach(room->System.out.println(room.getName())); //terminal operation.
-	}
+		
+		//more stream operations
+		// In general, its okay to work with external objects in a stream
+		// It is also okay to modify objects inside your stream. BUT YOU SHOULD
+		// NEVER DO BOTH
+		//.collect() a terminal operation within our pipeline
+		petFriendlyRooms=rooms.stream()
+			.filter(Room::isPetFriendly)
+			.collect(Collectors.toList()); 
+			// this terminal operator accepts a 'Collector', and we get several Collectors on the
+			// Collector's class via its static methods. Most commonly used is the Collectors.toList();
+			// All the elements that are flowed into the collect operatoration will be collected and returned
+			// as a List
+		petFriendlyRooms.stream()
+		//intermediate operator that takes in the element coming from the stream
+		//and then apply a transformation on the element which determines, what element
+		//flows out of the operation and further down the stream. In this case a string
+			.map(r->r.getName().getClass())
+			.forEach(System.out::println);
+		Double total = petFriendlyRooms.stream()
+			//applies a transformation on the element and passes double
+			//down the stream
+			.mapToDouble(new ToDoubleFunction<Room>()//.mapToDouble takes in an instance of a functional interface which is implemented using an anonymous class and then instantiated
+			{
+				public double applyAsDouble(Room room)
+				{
+					return room.getRate();
+				}
+			}) //also takes in a method reference
+			.sum(); //return sum of all the doubles that are flowing into that operation
+		Double totalWithLambda = petFriendlyRooms.stream()
+			//applies a transformation on the element and passes double
+			//down the stream
+			.mapToDouble(r->r.getRate()) //also takes in a lamda expression which matches the method signature of the required functional interface
+			.sum();
+		Double totalWithMethodReference = petFriendlyRooms.stream() //also takes in method reference which matches the method signature of the method in the required functional interface
+			.mapToDouble(Room::getRate)
+			.sum();
+		System.out.println(totalWithMethodReference);
+		System.out.println(totalWithLambda);
+		System.out.println(total);
+		}
 }
