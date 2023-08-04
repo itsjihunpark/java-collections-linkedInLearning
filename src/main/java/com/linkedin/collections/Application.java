@@ -3,6 +3,7 @@ package com.linkedin.collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Predicate; //a functional interface
@@ -156,27 +157,20 @@ public class Application {
 			//The above technique uses the functional programming style. However, it does not look very concise.
 			//that is because we used the anonymous classes to instanciate a functional interface.
 			//The below technique will use lamda expression which will make the code more concise.
-		
+			//Lambda is a function that only has parameters, an arrow, and body.
+			//Anything like method name, or return type is unneccesory.
+
+		/* 
 		rooms.stream()
-			.filter(new Predicate<Room>(){
-				@Override
-				public boolean test(Room t)
-				{
-					System.out.format("Testing %s with result %b%n", t.getName(), t.isPetFriendly());
-					return t.isPetFriendly(); //when true, the filter allows it to be further processed, otherwise, it blocks it
-				}
-			}) 
-			.forEach(new Consumer<Room>() { //need to set the generic to Room, otherwise we need to cast every room object to call room methods
-				// need to add its functional interface method as this anonymous
-				//clss implements Consumer interface
-				@Override
-				public void accept(Room room){
-					System.out.println(room.getName());
-				}
-			});
-
-
-		//System.out.println(rooms);
-	
+			.filter(t -> t.isPetFriendly()) //when true, the filter allows it to be further processed, otherwise, it blocks it
+			.forEach(room->System.out.println(room.getName()));
+		
+		//We can make the above even more concise
+		//We can replace the lambda with a method reference
+		//Method reference allows us to pass a method into a function
+		*/
+		rooms.stream()
+			.filter(Room::isPetFriendly) //'Room type::invoke isPetFriendly' Method reference can be used as a predicate for our filter operation
+			.forEach(room->System.out.println(room.getName())); //terminal operation.
 	}
 }
