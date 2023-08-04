@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
+import java.util.Iterator;
+import java.util.function.Predicate;
 
 public class RoomService {
 
@@ -17,22 +19,35 @@ public class RoomService {
 	public void applyDiscount(final double discount) {
 		
 		//Reduces the rate of each room by the provided discount
-	
+		this.inventory.forEach(r->r.setRate(r.getRate()*(1-discount)));
 	}
 
 	public Collection<Room> getRoomsByCapacity(final int requiredCapacity) {
 		
 		//Returns a new collection of rooms that meet or exceed the provided capacity
+		/* 
+		return this.inventory.stream()
+			.filter(new Predicate<Room>(){
+				public boolean test(Room r)
+				{
+					return r.getCapacity()>=requiredCapacity;
+				}
+			})
+			.collect(Collectors.toList());
+		*/
 		
-		return null;
-		
+		return this.inventory.stream()
+			.filter(r->r.getCapacity()>=requiredCapacity)
+			.collect(Collectors.toList());
 	}
 	
 	public Collection<Room> getRoomByRateAndType(final double rate, final String type){
 	
 		//Returns a new collection of rooms with a rate below the provided rate and that match the provided type
 		
-		return null;
+		return this.inventory.stream()
+			.filter(r->r.getRate()<=rate&&r.getType().equals(type))
+			.collect(Collectors.toList());
 		
 	}
 	
