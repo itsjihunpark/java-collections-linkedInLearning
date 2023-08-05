@@ -23,6 +23,7 @@ public class Application {
 			//comparable
 		
 		NavigableSet<Integer> numberTree = new TreeSet<>(numbers);
+		//[type<generic>] [variable name] = [keyword to instantiate new object] [Classname<Generic>][parenthesis to invoke constructor method] 
 
 
 		//.descendingSet() returns a set that is in the descending order
